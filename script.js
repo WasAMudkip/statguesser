@@ -1,4 +1,4 @@
-const MAX_POKEMON_ID = 10000;
+const MAX_POKEMON_ID = 1025;
 const COMPARE_STATS = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed'];
 
 const statNameSpan = document.getElementById('current-stat-name');
