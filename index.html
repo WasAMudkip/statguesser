@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stats</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <div id="stat-question">Which one has a higher: <span id="current-stat-name">...</span>?</div>
+
+        <div id="pokemon-area">
+            <div id="poka-card-1" class="pokemon-card">
+                <div class="pokemon-sprite">
+                    <img id="poka-img-1" src="" alt="Loading...">
+                </div>
+                <div id="poka-name-1" class="pokemon-name">Pokémon 1</div>
+                <div id="poka-stat-1" class="stat-value">--</div>
+                <button class="guess-button">Guess</button>
+            </div>
+
+            <div id="poka-card-2" class="pokemon-card">
+                <div class="pokemon-sprite">
+                    <img id="poka-img-2" src="" alt="Loading...">
+                </div>
+                <div id="poka-name-2" class="pokemon-name">Pokémon 2</div>
+                <div id="poka-stat-2" class="stat-value">--</div>
+                <button class="guess-button">Guess</button>
+            </div>
+        </div>
+
+        <div id="result-display">
+            <div id="feedback-text"></div>
+            <button id="next-button">Next Round</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
