@@ -1,4 +1,5 @@
 const MAX_POKEMON_ID = 1025;
+let allPokemonNames = [];
 const COMPARE_STATS = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed'];
 
 const statNameSpan = document.getElementById('current-stat-name');
@@ -12,13 +13,26 @@ let currentPokemon2 = null;
 let currentStatToCompare = '';
 let hasGuessed = false;
 
+async function initGame() {
+    try {
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025');
+        const data = await response.json();
+        allPokemonNames = data.results;
+        startNewRound();
+    } catch (e) {
+        feedbackText.innerText = "Error loading game.";
+    }
+}
+
 async function fetchRandomPokemon() {
-    const randomId = Math.floor(Math.random() * MAX_POKEMON_ID) + 1;
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+    const randomIndex = Math.floor(Math.random() * allPokemonNames.length);
+    const response = await fetch(allPokemonNames[randomIndex].url);
     return await response.json();
 }
 
 async function startNewRound() {
+    if (allPokemonNames.length === 0) return;
+    
     hasGuessed = false;
     feedbackText.innerHTML = '';
     nextButton.style.display = 'none';
@@ -29,20 +43,33 @@ async function startNewRound() {
     
     currentPokemon1 = await fetchRandomPokemon();
     currentPokemon2 = await fetchRandomPokemon();
+    
     currentStatToCompare = COMPARE_STATS[Math.floor(Math.random() * COMPARE_STATS.length)];
 
+    
+    let formattedStat = currentStatToCompare.replace(/-/g, ' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    
+    statNameSpan.innerText = formattedStat;
+    
     updateUI(currentPokemon1, '1');
     updateUI(currentPokemon2, '2');
-    statNameSpan.innerText = currentStatToCompare.replace('-', ' ');
 }
 
 function updateUI(data, id) {
+    
     document.getElementById(`poka-name-${id}`).innerText = data.name;
-    document.getElementById(`poka-img-${id}`).src = data.sprites.other['official-artwork'].front_default;
+    
+    const artwork = data.sprites.other['official-artwork'].front_default 
+                 || data.sprites.front_default;
+                 
+    document.getElementById(`poka-img-${id}`).src = artwork;
 }
 
 function handleGuess(guessP1) {
-    if (hasGuessed) return;
+    if (hasGuessed || !currentPokemon1) return;
     hasGuessed = true;
 
     const val1 = currentPokemon1.stats.find(s => s.stat.name === currentStatToCompare).base_stat;
@@ -66,4 +93,4 @@ card1.addEventListener('click', () => handleGuess(true));
 card2.addEventListener('click', () => handleGuess(false));
 nextButton.addEventListener('click', startNewRound);
 
-startNewRound();
+initGame();
